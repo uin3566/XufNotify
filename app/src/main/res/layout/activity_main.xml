@@ -3,5 +3,11 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
+    <ListView
+        android:id="@+id/lv_time_track"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:divider="@null">
+    </ListView>
 
 </LinearLayout>
