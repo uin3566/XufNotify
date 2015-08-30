@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
+    <EditText
+        android:id="@+id/et_event_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFE7A2"
+        android:hint="请输入待办备忘"
+        android:padding="10dp"
+        android:textColor="@android:color/black"
+        android:textColorHint="@android:color/darker_gray"
+        android:textSize="20sp"
+        android:maxLines="5"
+        android:lineSpacingExtra="5dp"/>
+
+    <TextView
+        android:id="@+id/tv_set_notify_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:textSize="18sp"/>
+
+    <com.roubow.xufnotify.widget.DateTimePicker
+        android:id="@+id/date_time_picker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#CBEFFF"/>
+
+</LinearLayout>
