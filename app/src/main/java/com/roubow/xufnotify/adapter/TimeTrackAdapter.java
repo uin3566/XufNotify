@@ -22,6 +22,9 @@ public class TimeTrackAdapter extends BaseAdapter {
     private List<EventBean> mEventBeanList;
     private Context mContext;
 
+    private final int TYPE_EVENT = 0;
+    private final int TYPE_DATE = 1;
+
     public TimeTrackAdapter(Context context){
         mContext = context;
     }
@@ -29,6 +32,24 @@ public class TimeTrackAdapter extends BaseAdapter {
     public void setData(List<EventBean> eventBeanList){
         mEventBeanList = eventBeanList;
         notifyDataSetChanged();
+    }
+
+    @Override
+    public int getItemViewType(int position) {
+        int type;
+        EventBean eventBean = (EventBean)getItem(position);
+        if (eventBean.getDateItem()){
+            type = TYPE_DATE;
+        } else {
+            type = TYPE_EVENT;
+        }
+
+        return type;
+    }
+
+    @Override
+    public int getViewTypeCount() {
+        return 2;
     }
 
     @Override
@@ -51,28 +72,49 @@ public class TimeTrackAdapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        ViewHolder holder = null;
+        EventViewHolder eventHolder = null;
+        DateViewHolder dateHolder = null;
+        int type = getItemViewType(position);
         EventBean eventBean = mEventBeanList.get(position);
         if (convertView == null){
-            convertView = LayoutInflater.from(mContext).inflate(R.layout.time_track_list_event_item, parent, false);
-            holder = new ViewHolder(convertView);
-            convertView.setTag(holder);
+            if (type == TYPE_DATE){
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.time_track_list_date_item, parent, false);
+                dateHolder = new DateViewHolder(convertView);
+                convertView.setTag(dateHolder);
+            } else {
+                convertView = LayoutInflater.from(mContext).inflate(R.layout.time_track_list_event_item, parent, false);
+                eventHolder = new EventViewHolder(convertView);
+                convertView.setTag(eventHolder);
+            }
         }
 
-        holder = (ViewHolder)convertView.getTag();
-        holder.mDateTextView.setText(DateUtil.getDateString(eventBean.getNotifyDate()));
-        holder.mEventContentTextView.setText(eventBean.getEventContent());
+        if (type == TYPE_DATE){
+            dateHolder = (DateViewHolder)convertView.getTag();
+            dateHolder.mCreateDateTextView.setText(DateUtil.getDateStringMD(eventBean.getCreateDate()));
+        } else {
+            eventHolder = (EventViewHolder)convertView.getTag();
+            eventHolder.mNotifyDateTextView.setText(DateUtil.getDateString(eventBean.getNotifyDate()));
+            eventHolder.mEventContentTextView.setText(eventBean.getEventContent());
+        }
 
         return convertView;
     }
 
-    private class ViewHolder{
-        TextView mDateTextView;
+    private class EventViewHolder{
+        TextView mNotifyDateTextView;
         TextView mEventContentTextView;
 
-        public ViewHolder(View view){
-            mDateTextView = (TextView)view.findViewById(R.id.tv_date);
+        public EventViewHolder(View view){
+            mNotifyDateTextView = (TextView)view.findViewById(R.id.tv_notify_date);
             mEventContentTextView = (TextView)view.findViewById(R.id.tv_event_content);
+        }
+    }
+
+    private class DateViewHolder{
+        TextView mCreateDateTextView;
+
+        public DateViewHolder(View view){
+            mCreateDateTextView = (TextView)view.findViewById(R.id.tv_create_date);
         }
     }
 }

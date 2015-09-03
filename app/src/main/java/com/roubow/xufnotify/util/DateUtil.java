@@ -2,6 +2,7 @@ package com.roubow.xufnotify.util;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 
 /**
@@ -10,6 +11,8 @@ import java.util.Date;
 public class DateUtil {
 
     public static String mDateFormat = "yyyy年MM月dd日 HH:mm";
+
+    private static Calendar calendar = Calendar.getInstance();
 
     public static String getDateString(Date date){
         String ret;
@@ -25,6 +28,32 @@ public class DateUtil {
         ret = getDateString(date);
 
         return ret;
+    }
+
+    public static String getDateStringMD(Date date){
+        String ret;
+        DateFormat dateFormat = new SimpleDateFormat("MM月dd日");
+        ret = dateFormat.format(date);
+
+        return ret;
+    }
+
+    public static boolean isDifferentDay(Date date1, Date date2){
+        calendar.setTime(date1);
+        int year1 = calendar.get(Calendar.YEAR);
+        int day1 = calendar.get(Calendar.DAY_OF_YEAR);
+        calendar.setTime(date2);
+        int year2 = calendar.get(Calendar.YEAR);
+        int day2 = calendar.get(Calendar.DAY_OF_YEAR);
+        if (year1 != year2){
+            return true;
+        } else {
+            if (day1 != day2){
+                return true;
+            } else {
+                return false;
+            }
+        }
     }
 
     public static int getDaysOfMonth(int year, int month){

@@ -1,6 +1,5 @@
 package com.roubow.xufnotify.ui;
 
-import android.app.usage.UsageEvents;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.ListView;
@@ -11,10 +10,22 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.roubow.xufnotify.R;
 import com.roubow.xufnotify.adapter.TimeTrackAdapter;
+import com.roubow.xufnotify.data.EventBean;
 import com.roubow.xufnotify.data.EventLab;
+import com.roubow.xufnotify.util.FileUtil;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+import java.io.IOException;
+import java.util.List;
 
 
 public class MainActivity extends SherlockActivity {
+
+    private final String FILE_NAME = "EventList";
 
     private long mFirstBackPressTime;
 
@@ -36,10 +47,50 @@ public class MainActivity extends SherlockActivity {
         mAdapter.setData(EventLab.getInstance().getEventBeanList());
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+        try{
+            _saveEventsToFile();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     private void _init(){
         mListView = (ListView)findViewById(R.id.lv_time_track);
         mAdapter = new TimeTrackAdapter(this);
         mListView.setAdapter(mAdapter);
+        try{
+            _getEventsFromFile();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private void _saveEventsToFile() throws JSONException , IOException{
+        List<EventBean> eventBeanList = EventLab.getInstance().getEventBeanList();
+        if (eventBeanList == null || eventBeanList.isEmpty()){
+            return;
+        }
+
+        JSONArray jsonArray = new JSONArray();
+        for (EventBean eventBean : eventBeanList){
+            JSONObject jsonObject = eventBean.toJson();
+            jsonArray.put(jsonObject);
+        }
+
+        FileUtil.saveString(this, FILE_NAME, jsonArray.toString());
+    }
+
+    private void _getEventsFromFile() throws IOException, JSONException{
+        String jsonString = FileUtil.getString(this, FILE_NAME);
+        JSONArray jsonArray = (JSONArray)new JSONTokener(jsonString).nextValue();
+        EventLab.getInstance().clearLab();
+        for (int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonObject = jsonArray.getJSONObject(i);
+            EventLab.getInstance().addEvent(new EventBean(jsonObject));
+        }
     }
 
     @Override

@@ -16,8 +16,6 @@ import com.roubow.xufnotify.data.EventLab;
 import com.roubow.xufnotify.util.DateUtil;
 import com.roubow.xufnotify.widget.DateTimePicker;
 
-import net.simonvt.numberpicker.NumberPicker;
-
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -110,7 +108,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         eventBean.setEventContent(eventContent);
 
         EventLab eventLab = EventLab.getInstance();
-        eventLab.addEvent(eventBean);
+        eventLab.addEventEx(eventBean);
 
         return true;
     }
