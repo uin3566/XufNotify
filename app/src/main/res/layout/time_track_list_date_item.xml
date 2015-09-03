@@ -1,39 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="60dp"
-                android:background="#E5E5E5"
-                android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="60dp"
+              android:background="#E5E5E5"
+              android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="25dp">
+        android:layout_weight="1">
 
         <ImageView
             android:layout_width="4dp"
+            android:layout_marginRight="18dp"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
             android:background="#B4D680"/>
 
         <ImageView
             android:layout_width="30dp"
             android:layout_height="30dp"
-            android:layout_centerInParent="true"
+            android:layout_marginRight="5dp"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
             android:background="@drawable/shape_date_sign"/>
 
     </RelativeLayout>
 
     <TextView
         android:id="@+id/tv_create_date"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:padding="10dp"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
-        android:text="create_date"/>
+        android:layout_marginRight="10dp"
+        android:layout_weight="4"
+        android:padding="10dp"
+        android:text="create_date"
+        android:textSize="20sp"
+        android:textStyle="bold"/>
 
 </LinearLayout>

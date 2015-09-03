@@ -14,12 +14,14 @@ public class EventBean {
 
     private final String JSON_ID = "id";
     private final String JSON_IS_DATE_ITEM = "is_date_item";
+    private final String JSON_IS_STAR_EVENT = "is_star_event";
     private final String JSON_CREATE_DATE = "create_date";
     private final String JSON_NOTIFY_DATE = "notify_date";
     private final String JSON_EVENT_CONTENT = "event_content";
 
     private UUID mId;
     private boolean mIsDateItem;
+    private boolean mIsStarEvent;
     private Date mCreateDate;
     private Date mNotifyDate;
     private String mEventContent;
@@ -28,11 +30,13 @@ public class EventBean {
         mId = UUID.randomUUID();
         mCreateDate = new Date(System.currentTimeMillis());
         mIsDateItem = false;
+        mIsStarEvent = false;
     }
 
     public EventBean(JSONObject jsonObject) throws JSONException{
         mId = UUID.fromString(jsonObject.getString(JSON_ID));
         mIsDateItem = jsonObject.getBoolean(JSON_IS_DATE_ITEM);
+        mIsStarEvent = jsonObject.getBoolean(JSON_IS_STAR_EVENT);
         mCreateDate = new Date(jsonObject.getLong(JSON_CREATE_DATE));
         if (jsonObject.has(JSON_NOTIFY_DATE)){
             mNotifyDate = new Date(jsonObject.getLong(JSON_NOTIFY_DATE));
@@ -46,6 +50,7 @@ public class EventBean {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(JSON_ID, mId.toString());
         jsonObject.put(JSON_IS_DATE_ITEM, mIsDateItem);
+        jsonObject.put(JSON_IS_STAR_EVENT, mIsStarEvent);
         jsonObject.put(JSON_CREATE_DATE, mCreateDate.getTime());
         if (mNotifyDate != null){
             jsonObject.put(JSON_NOTIFY_DATE, mNotifyDate.getTime());
@@ -62,6 +67,14 @@ public class EventBean {
 
     public boolean isDateItem(){
         return mIsDateItem;
+    }
+
+    public boolean isStarEvent() {
+        return mIsStarEvent;
+    }
+
+    public void setStarEvent(boolean isStarEvent) {
+        mIsStarEvent = isStarEvent;
     }
 
     public void setEventContent(String content){

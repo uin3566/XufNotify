@@ -88,6 +88,11 @@ public class EventLab {
         mEventBeanList.clear();
     }
 
+    public void starItemAt(int position){
+        boolean b = mEventBeanList.get(position).isStarEvent();
+        mEventBeanList.get(position).setStarEvent(!b);
+    }
+
     public List<EventBean> getEventBeanList(){
         return mEventBeanList;
     }

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.roubow.xufnotify.R;
@@ -94,16 +95,23 @@ public class TimeTrackAdapter extends BaseAdapter {
             eventHolder = (EventViewHolder)convertView.getTag();
             eventHolder.mNotifyDateTextView.setText(DateUtil.getDateString(eventBean.getNotifyDate()));
             eventHolder.mEventContentTextView.setText(eventBean.getEventContent());
+            if (eventBean.isStarEvent()){
+                eventHolder.mStarImageView.setVisibility(View.VISIBLE);
+            } else {
+                eventHolder.mStarImageView.setVisibility(View.INVISIBLE);
+            }
         }
 
         return convertView;
     }
 
     private class EventViewHolder{
+        ImageView mStarImageView;
         TextView mNotifyDateTextView;
         TextView mEventContentTextView;
 
         public EventViewHolder(View view){
+            mStarImageView = (ImageView)view.findViewById(R.id.iv_star);
             mNotifyDateTextView = (TextView)view.findViewById(R.id.tv_notify_date);
             mEventContentTextView = (TextView)view.findViewById(R.id.tv_event_content);
         }

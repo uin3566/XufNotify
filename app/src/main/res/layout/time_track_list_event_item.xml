@@ -1,36 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#E5E5E5"
-                android:orientation="horizontal">
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="#E5E5E5"
+              android:orientation="horizontal">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_marginLeft="30dp">
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/iv_star"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/ic_star2"/>
 
         <ImageView
             android:layout_width="4dp"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="18dp"
             android:background="#B4D680"/>
 
         <ImageView
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_centerInParent="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10dp"
             android:background="@drawable/shape_event_sign"/>
 
     </RelativeLayout>
 
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="15dp"
         android:layout_marginRight="10dp"
-        android:padding="10dp"
-        android:orientation="vertical">
+        android:layout_weight="4"
+        android:orientation="vertical"
+        android:padding="10dp">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -38,29 +50,29 @@
             android:orientation="horizontal">
 
             <TextView
-                android:textSize="16sp"
-                android:text="提醒时间:"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:text="提醒时间:"
+                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/tv_notify_date"
-                android:textSize="15sp"
-                android:layout_marginLeft="5dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="notify_date"/>
+                android:layout_marginLeft="5dp"
+                android:text="notify_date"
+                android:textSize="15sp"/>
 
         </LinearLayout>
 
         <TextView
             android:id="@+id/tv_event_content"
-            android:textSize="19sp"
-            android:textColor="#398EA2"
-            android:layout_marginTop="5dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="event_content"/>
+            android:layout_marginTop="5dp"
+            android:text="event_content"
+            android:textColor="#398EA2"
+            android:textSize="19sp"/>
 
     </LinearLayout>
 

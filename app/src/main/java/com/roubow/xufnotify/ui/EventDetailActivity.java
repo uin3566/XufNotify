@@ -33,7 +33,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_event_detail);
-        setTitle("备忘详情");
+        setTitle("返回");
 
         _init();
     }

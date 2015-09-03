@@ -75,6 +75,12 @@ public class MainActivity extends SherlockActivity {
             @Override
             public void create(SwipeMenu swipeMenu) {
                 if (swipeMenu.getViewType() == mAdapter.TYPE_EVENT){
+                    //star item
+                    SwipeMenuItem starItem = new SwipeMenuItem(MainActivity.this);
+                    starItem.setBackground(new ColorDrawable(Color.rgb(0x30, 0xB1, 0xF5)));
+                    starItem.setWidth(DimenUtil.dp2px(MainActivity.this, 70));
+                    starItem.setIcon(R.mipmap.ic_star);
+                    swipeMenu.addMenuItem(starItem);
                     //delete item
                     SwipeMenuItem deleteItem = new SwipeMenuItem(MainActivity.this);
                     deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
@@ -90,8 +96,13 @@ public class MainActivity extends SherlockActivity {
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu swipeMenu, int index) {
-                EventLab.getInstance().deleteEventAt(position);
-                mAdapter.notifyDataSetChanged();
+                if (index == 0){
+                    EventLab.getInstance().starItemAt(position);
+                    mAdapter.notifyDataSetChanged();
+                } else {
+                    EventLab.getInstance().deleteEventAt(position);
+                    mAdapter.notifyDataSetChanged();
+                }
                 return true;
             }
         });
