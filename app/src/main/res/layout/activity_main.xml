@@ -3,11 +3,17 @@
               android:layout_height="match_parent"
               android:orientation="vertical">
 
-    <ListView
+    <!--<ListView-->
+        <!--android:id="@+id/lv_time_track"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--android:divider="@null">-->
+    <!--</ListView>-->
+
+    <com.baoyz.swipemenulistview.SwipeMenuListView
         android:id="@+id/lv_time_track"
+        android:divider="@null"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:divider="@null">
-    </ListView>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

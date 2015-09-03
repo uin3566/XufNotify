@@ -1,6 +1,5 @@
 package com.roubow.xufnotify.adapter;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,8 +21,8 @@ public class TimeTrackAdapter extends BaseAdapter {
     private List<EventBean> mEventBeanList;
     private Context mContext;
 
-    private final int TYPE_EVENT = 0;
-    private final int TYPE_DATE = 1;
+    public final int TYPE_EVENT = 0;
+    public final int TYPE_DATE = 1;
 
     public TimeTrackAdapter(Context context){
         mContext = context;
@@ -38,7 +37,7 @@ public class TimeTrackAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         int type;
         EventBean eventBean = (EventBean)getItem(position);
-        if (eventBean.getDateItem()){
+        if (eventBean.isDateItem()){
             type = TYPE_DATE;
         } else {
             type = TYPE_EVENT;
@@ -90,7 +89,7 @@ public class TimeTrackAdapter extends BaseAdapter {
 
         if (type == TYPE_DATE){
             dateHolder = (DateViewHolder)convertView.getTag();
-            dateHolder.mCreateDateTextView.setText(DateUtil.getDateStringMD(eventBean.getCreateDate()));
+            dateHolder.mCreateDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getCreateDate()));
         } else {
             eventHolder = (EventViewHolder)convertView.getTag();
             eventHolder.mNotifyDateTextView.setText(DateUtil.getDateString(eventBean.getNotifyDate()));

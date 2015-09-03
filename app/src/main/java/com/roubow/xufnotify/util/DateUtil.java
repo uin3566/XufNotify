@@ -30,9 +30,9 @@ public class DateUtil {
         return ret;
     }
 
-    public static String getDateStringMD(Date date){
+    public static String getDateStringYMD(Date date){
         String ret;
-        DateFormat dateFormat = new SimpleDateFormat("MM月dd日");
+        DateFormat dateFormat = new SimpleDateFormat("yyyy年MM月dd日");
         ret = dateFormat.format(date);
 
         return ret;

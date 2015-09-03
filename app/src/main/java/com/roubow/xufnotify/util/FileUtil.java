@@ -5,6 +5,7 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -30,6 +31,12 @@ public class FileUtil {
                 writer.close();
             }
         }
+    }
+
+    public static void deleteFile(Context context, String fileName){
+        String path = "data/data/" + context.getPackageName() + "/files/" + fileName;
+        File file = new File(path);
+        file.delete();
     }
 
     public static String getString(Context context, String fileName) throws IOException{

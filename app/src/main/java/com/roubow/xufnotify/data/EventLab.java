@@ -1,7 +1,5 @@
 package com.roubow.xufnotify.data;
 
-import android.content.Context;
-
 import com.roubow.xufnotify.util.DateUtil;
 
 import java.util.ArrayList;
@@ -51,6 +49,33 @@ public class EventLab {
         dateItemEvent.setDateItem(true);
         mEventBeanList.add(0, eventItem);
         mEventBeanList.add(0, dateItemEvent);
+    }
+
+    public void deleteEventAt(int position){
+        int previous = position - 1;
+        int next = position + 1;
+        EventBean curEvent = mEventBeanList.get(position);
+        EventBean preEvent = mEventBeanList.get(previous);
+        if (next == mEventBeanList.size()){
+            if (preEvent.isDateItem()){
+                deleteEvent(curEvent);
+                deleteEvent(preEvent);
+            } else {
+                deleteEvent(curEvent);
+            }
+        } else {
+            EventBean nextEvent = mEventBeanList.get(next);
+            if (!nextEvent.isDateItem()){
+                deleteEvent(curEvent);
+            } else {
+                if (preEvent.isDateItem()){
+                    deleteEvent(curEvent);
+                    deleteEvent(preEvent);
+                } else {
+                    deleteEvent(curEvent);
+                }
+            }
+        }
     }
 
     public void deleteEvent(EventBean e){

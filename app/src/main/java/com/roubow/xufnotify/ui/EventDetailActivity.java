@@ -40,6 +40,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
 
     private void _init(){
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
 
         mDetailEditText = (EditText)findViewById(R.id.et_event_detail);
         Timer timer = new Timer();

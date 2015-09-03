@@ -60,7 +60,7 @@ public class EventBean {
         mIsDateItem = isDateItem;
     }
 
-    public boolean getDateItem(){
+    public boolean isDateItem(){
         return mIsDateItem;
     }
 

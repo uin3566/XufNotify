@@ -1,6 +1,8 @@
 package com.roubow.xufnotify.ui;
 
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -8,10 +10,15 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.baoyz.swipemenulistview.SwipeMenu;
+import com.baoyz.swipemenulistview.SwipeMenuCreator;
+import com.baoyz.swipemenulistview.SwipeMenuItem;
+import com.baoyz.swipemenulistview.SwipeMenuListView;
 import com.roubow.xufnotify.R;
 import com.roubow.xufnotify.adapter.TimeTrackAdapter;
 import com.roubow.xufnotify.data.EventBean;
 import com.roubow.xufnotify.data.EventLab;
+import com.roubow.xufnotify.util.DimenUtil;
 import com.roubow.xufnotify.util.FileUtil;
 
 import org.json.JSONArray;
@@ -29,14 +36,13 @@ public class MainActivity extends SherlockActivity {
 
     private long mFirstBackPressTime;
 
-    private ListView mListView;
+    private SwipeMenuListView mListView;
     private TimeTrackAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        setTitle("备忘");
 
         _init();
     }
@@ -58,9 +64,38 @@ public class MainActivity extends SherlockActivity {
     }
 
     private void _init(){
-        mListView = (ListView)findViewById(R.id.lv_time_track);
+        setTitle("备忘");
+        getSupportActionBar().setDisplayShowHomeEnabled(false);
+
+        mListView = (SwipeMenuListView)findViewById(R.id.lv_time_track);
         mAdapter = new TimeTrackAdapter(this);
         mListView.setAdapter(mAdapter);
+
+        SwipeMenuCreator creator = new SwipeMenuCreator() {
+            @Override
+            public void create(SwipeMenu swipeMenu) {
+                if (swipeMenu.getViewType() == mAdapter.TYPE_EVENT){
+                    //delete item
+                    SwipeMenuItem deleteItem = new SwipeMenuItem(MainActivity.this);
+                    deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
+                            0x3F, 0x25)));
+                    deleteItem.setWidth(DimenUtil.dp2px(MainActivity.this, 70));
+                    deleteItem.setIcon(R.mipmap.ic_delete);
+                    swipeMenu.addMenuItem(deleteItem);
+                }
+            }
+        };
+        mListView.setMenuCreator(creator);
+        mListView.setSwipeDirection(SwipeMenuListView.DIRECTION_LEFT);
+        mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(int position, SwipeMenu swipeMenu, int index) {
+                EventLab.getInstance().deleteEventAt(position);
+                mAdapter.notifyDataSetChanged();
+                return true;
+            }
+        });
+
         try{
             _getEventsFromFile();
         } catch (Exception e){
@@ -71,6 +106,7 @@ public class MainActivity extends SherlockActivity {
     private void _saveEventsToFile() throws JSONException , IOException{
         List<EventBean> eventBeanList = EventLab.getInstance().getEventBeanList();
         if (eventBeanList == null || eventBeanList.isEmpty()){
+            FileUtil.deleteFile(this, FILE_NAME);
             return;
         }
 
