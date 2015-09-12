@@ -1,7 +1,9 @@
 package com.roubow.xufnotify.ui;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -28,6 +30,10 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private EditText mDetailEditText;
     private TextView mSetTimeTextView;
     private DateTimePicker mDateTimePicker;
+
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder;
+    private final int mNotifyId = 100;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,6 +64,17 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
 
         mSetTimeTextView = (TextView)findViewById(R.id.tv_set_notify_time);
         mSetTimeTextView.setText("设置提醒时间：" + DateUtil.getCurrentDateString());
+
+        //notification
+        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this);
+    }
+
+    private void _setNotify(String strContent, Date notifyDate){
+        mBuilder.setContentTitle("备忘提醒");
+        mBuilder.setContentText(strContent);
+        mBuilder.setWhen(notifyDate.getTime());
+        mNotificationManager.notify(mNotifyId, mBuilder.build());
     }
 
     @Override
@@ -110,6 +127,8 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
 
         EventLab eventLab = EventLab.getInstance();
         eventLab.addEventEx(eventBean);
+
+        _setNotify(eventBean.getEventContent(), eventBean.getNotifyDate());
 
         return true;
     }
