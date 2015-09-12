@@ -1,7 +1,11 @@
 package com.roubow.xufnotify.ui;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.view.inputmethod.InputMethodManager;
@@ -32,7 +36,6 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private DateTimePicker mDateTimePicker;
 
     private NotificationManager mNotificationManager;
-    private NotificationCompat.Builder mBuilder;
     private final int mNotifyId = 100;
 
     @Override
@@ -67,14 +70,22 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
 
         //notification
         mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
-        mBuilder = new NotificationCompat.Builder(this);
     }
 
     private void _setNotify(String strContent, Date notifyDate){
-        mBuilder.setContentTitle("备忘提醒");
-        mBuilder.setContentText(strContent);
-        mBuilder.setWhen(notifyDate.getTime());
-        mNotificationManager.notify(mNotifyId, mBuilder.build());
+        Notification n = new Notification();
+        n.icon = R.mipmap.ic_launcher;
+        n.when = notifyDate.getTime();
+        Intent intent = new Intent(this, MainActivity.class);
+        n.ledARGB = Color.GREEN;
+        n.ledOffMS = 1000;
+        n.ledOnMS = 1000;
+        n.flags |= Notification.FLAG_SHOW_LIGHTS;
+        n.flags |= Notification.FLAG_AUTO_CANCEL;
+        n.flags |= Notification.FLAG_INSISTENT;
+        n.contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
+        n.setLatestEventInfo(this, "备忘提醒", strContent, n.contentIntent);
+        mNotificationManager.notify(mNotifyId, n);
     }
 
     @Override
