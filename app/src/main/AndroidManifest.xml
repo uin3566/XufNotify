@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.roubow.xufnotify" >
 
+    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -17,6 +19,8 @@
         </activity>
 
         <activity android:name=".ui.EventDetailActivity"/>
+
+        <receiver android:name=".ui.NotifyReceiver" android:process=":remote"/>
     </application>
 
 </manifest>

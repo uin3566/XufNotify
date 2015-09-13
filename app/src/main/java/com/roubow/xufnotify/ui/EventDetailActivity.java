@@ -1,13 +1,10 @@
 package com.roubow.xufnotify.ui;
 
-import android.app.Notification;
-import android.app.NotificationManager;
+import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -35,8 +32,9 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private TextView mSetTimeTextView;
     private DateTimePicker mDateTimePicker;
 
-    private NotificationManager mNotificationManager;
-    private final int mNotifyId = 100;
+    private AlarmManager mAlarmManager;
+
+    public static final String EXTRA_CONTENT = "extra_content";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,24 +66,14 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         mSetTimeTextView = (TextView)findViewById(R.id.tv_set_notify_time);
         mSetTimeTextView.setText("设置提醒时间：" + DateUtil.getCurrentDateString());
 
-        //notification
-        mNotificationManager = (NotificationManager)getSystemService(NOTIFICATION_SERVICE);
+        mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
     }
 
-    private void _setNotify(String strContent, Date notifyDate){
-        Notification n = new Notification();
-        n.icon = R.mipmap.ic_launcher;
-        n.when = notifyDate.getTime();
-        Intent intent = new Intent(this, MainActivity.class);
-        n.ledARGB = Color.GREEN;
-        n.ledOffMS = 1000;
-        n.ledOnMS = 1000;
-        n.flags |= Notification.FLAG_SHOW_LIGHTS;
-        n.flags |= Notification.FLAG_AUTO_CANCEL;
-        n.flags |= Notification.FLAG_INSISTENT;
-        n.contentIntent = PendingIntent.getActivity(this, 0, intent, 0);
-        n.setLatestEventInfo(this, "备忘提醒", strContent, n.contentIntent);
-        mNotificationManager.notify(mNotifyId, n);
+    private void _setAlarm(EventBean bean){
+        Intent intent = new Intent(EventDetailActivity.this, NotifyReceiver.class);
+        intent.putExtra(EXTRA_CONTENT, bean.getEventContent());
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getNotifyDate().getTime(), pendingIntent);
     }
 
     @Override
@@ -139,7 +127,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         EventLab eventLab = EventLab.getInstance();
         eventLab.addEventEx(eventBean);
 
-        _setNotify(eventBean.getEventContent(), eventBean.getNotifyDate());
+        _setAlarm(eventBean);
 
         return true;
     }
