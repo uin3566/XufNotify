@@ -20,7 +20,11 @@
 
         <activity android:name=".ui.EventDetailActivity"/>
 
-        <receiver android:name=".ui.NotifyReceiver" android:process=":remote"/>
+        <receiver android:name=".ui.NotifyReceiver">
+            <intent-filter>
+                <action android:name="com.roubow.xufnotify"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

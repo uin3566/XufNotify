@@ -35,6 +35,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private AlarmManager mAlarmManager;
 
     public static final String EXTRA_CONTENT = "extra_content";
+    public static final String BROADCAST_ACTION = "com.roubow.xufnotify";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,10 +71,15 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     }
 
     private void _setAlarm(EventBean bean){
-        Intent intent = new Intent(EventDetailActivity.this, NotifyReceiver.class);
+//        Intent intent = new Intent(EventDetailActivity.this, NotifyReceiver.class);
+//        intent.putExtra(EXTRA_CONTENT, bean.getEventContent());
+//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+//        mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getNotifyDate().getTime(), pendingIntent);
+        Intent intent = new Intent();
+        intent.setAction(BROADCAST_ACTION);
+        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
         intent.putExtra(EXTRA_CONTENT, bean.getEventContent());
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-        mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getNotifyDate().getTime(), pendingIntent);
+        sendBroadcast(intent);
     }
 
     @Override
