@@ -1,10 +1,12 @@
-package com.roubow.xufnotify.ui;
+package com.roubow.xufnotify.components;
 
 import android.app.AlarmManager;
-import android.app.PendingIntent;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -32,10 +34,25 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private TextView mSetTimeTextView;
     private DateTimePicker mDateTimePicker;
 
-    private AlarmManager mAlarmManager;
+    private EventBean mBean = new EventBean();
+
+    private BackgroundService.MyBinder mMyBinder;
 
     public static final String EXTRA_CONTENT = "extra_content";
     public static final String BROADCAST_ACTION = "com.roubow.xufnotify";
+
+    private ServiceConnection connection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            mMyBinder = (BackgroundService.MyBinder)iBinder;
+            mMyBinder.setAlarm(mBean);
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +61,12 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         setTitle("返回");
 
         _init();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(connection);
     }
 
     private void _init(){
@@ -67,19 +90,10 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         mSetTimeTextView = (TextView)findViewById(R.id.tv_set_notify_time);
         mSetTimeTextView.setText("设置提醒时间：" + DateUtil.getCurrentDateString());
 
-        mAlarmManager = (AlarmManager)getSystemService(ALARM_SERVICE);
     }
 
-    private void _setAlarm(EventBean bean){
-//        Intent intent = new Intent(EventDetailActivity.this, NotifyReceiver.class);
-//        intent.putExtra(EXTRA_CONTENT, bean.getEventContent());
-//        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
-//        mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getNotifyDate().getTime(), pendingIntent);
-        Intent intent = new Intent();
-        intent.setAction(BROADCAST_ACTION);
-        intent.addFlags(Intent.FLAG_INCLUDE_STOPPED_PACKAGES);
-        intent.putExtra(EXTRA_CONTENT, bean.getEventContent());
-        sendBroadcast(intent);
+    private void _setAlarm(){
+        bindService(new Intent(this, BackgroundService.class), connection, BIND_AUTO_CREATE);
     }
 
     @Override
@@ -126,14 +140,13 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
             return false;
         }
 
-        EventBean eventBean = new EventBean();
-        eventBean.setNotifyDate(notifyDate);
-        eventBean.setEventContent(eventContent);
+        mBean.setNotifyDate(notifyDate);
+        mBean.setEventContent(eventContent);
 
         EventLab eventLab = EventLab.getInstance();
-        eventLab.addEventEx(eventBean);
+        eventLab.addEventEx(mBean);
 
-        _setAlarm(eventBean);
+        _setAlarm();
 
         return true;
     }

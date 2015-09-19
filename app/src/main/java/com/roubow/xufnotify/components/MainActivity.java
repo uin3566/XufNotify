@@ -1,10 +1,9 @@
-package com.roubow.xufnotify.ui;
+package com.roubow.xufnotify.components;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -63,7 +62,15 @@ public class MainActivity extends SherlockActivity {
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
+
     private void _init(){
+
+        startService(new Intent(this, BackgroundService.class));
+
         setTitle("备忘");
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 

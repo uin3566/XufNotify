@@ -10,7 +10,7 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name=".ui.MainActivity"
+            android:name=".components.MainActivity"
             android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -18,13 +18,15 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".ui.EventDetailActivity"/>
+        <activity android:name=".components.EventDetailActivity"/>
 
-        <receiver android:name=".ui.NotifyReceiver">
+        <receiver android:name=".components.NotifyReceiver">
             <intent-filter>
                 <action android:name="com.roubow.xufnotify"/>
             </intent-filter>
         </receiver>
+
+        <service android:name=".components.BackgroundService"/>
     </application>
 
 </manifest>

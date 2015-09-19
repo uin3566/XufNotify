@@ -1,4 +1,4 @@
-package com.roubow.xufnotify.ui;
+package com.roubow.xufnotify.components;
 
 import android.app.Notification;
 import android.app.NotificationManager;
