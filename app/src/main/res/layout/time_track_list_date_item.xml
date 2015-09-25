@@ -28,7 +28,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/tv_create_date"
+        android:id="@+id/tv_do_event_date"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"

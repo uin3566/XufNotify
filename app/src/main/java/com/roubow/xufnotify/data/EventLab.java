@@ -47,6 +47,7 @@ public class EventLab {
     private void _addEventAndDateItem(EventBean eventItem){
         EventBean dateItemEvent = new EventBean();
         dateItemEvent.setDateItem(true);
+        dateItemEvent.setDoEventDate(eventItem.getDoEventDate());
         mEventBeanList.add(0, eventItem);
         mEventBeanList.add(0, dateItemEvent);
     }

@@ -40,7 +40,7 @@ public class BackgroundService extends Service {
             Intent intent = new Intent(BackgroundService.this, NotifyReceiver.class);
             intent.putExtra(EventDetailActivity.EXTRA_CONTENT, bean.getEventContent());
             PendingIntent pendingIntent = PendingIntent.getBroadcast(BackgroundService.this, 0, intent, 0);
-            mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getNotifyDate().getTime(), pendingIntent);
+            mAlarmManager.set(AlarmManager.RTC_WAKEUP, bean.getDoEventDate().getTime(), pendingIntent);
         }
     }
 

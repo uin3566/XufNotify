@@ -1,6 +1,5 @@
 package com.roubow.xufnotify.components;
 
-import android.app.AlarmManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -39,7 +38,6 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     private BackgroundService.MyBinder mMyBinder;
 
     public static final String EXTRA_CONTENT = "extra_content";
-    public static final String BROADCAST_ACTION = "com.roubow.xufnotify";
 
     private ServiceConnection connection = new ServiceConnection() {
         @Override
@@ -88,7 +86,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         mDateTimePicker.setCallback(this);
 
         mSetTimeTextView = (TextView)findViewById(R.id.tv_set_notify_time);
-        mSetTimeTextView.setText("设置提醒时间：" + DateUtil.getCurrentDateString());
+        mSetTimeTextView.setText("设置待办时间：" + DateUtil.getCurrentDateString());
 
     }
 
@@ -132,21 +130,21 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
             return false;
         }
 
-        Date notifyDate = mDateTimePicker.getDate();
+        Date doEventDate = mDateTimePicker.getDate();
         Date curDate = new Date(System.currentTimeMillis());
 
-        if (notifyDate.before(curDate)){
+        if (doEventDate.before(curDate)){
             Toast.makeText(this, "请输入未来的时间点", Toast.LENGTH_SHORT).show();
             return false;
         }
 
-        mBean.setNotifyDate(notifyDate);
+        mBean.setDoEventDate(doEventDate);
         mBean.setEventContent(eventContent);
 
         EventLab eventLab = EventLab.getInstance();
         eventLab.addEventEx(mBean);
 
-        _setAlarm();
+        //_setAlarm();
 
         return true;
     }

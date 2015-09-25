@@ -90,10 +90,10 @@ public class TimeTrackAdapter extends BaseAdapter {
 
         if (type == TYPE_DATE){
             dateHolder = (DateViewHolder)convertView.getTag();
-            dateHolder.mCreateDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getCreateDate()));
+            dateHolder.mDoEventDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getDoEventDate()));
         } else {
             eventHolder = (EventViewHolder)convertView.getTag();
-            eventHolder.mNotifyDateTextView.setText(DateUtil.getDateString(eventBean.getNotifyDate()));
+            eventHolder.mCreateDateTextView.setText(DateUtil.getDateString(eventBean.getCreateDate()));
             eventHolder.mEventContentTextView.setText(eventBean.getEventContent());
             if (eventBean.isStarEvent()){
                 eventHolder.mStarImageView.setVisibility(View.VISIBLE);
@@ -107,21 +107,21 @@ public class TimeTrackAdapter extends BaseAdapter {
 
     private class EventViewHolder{
         ImageView mStarImageView;
-        TextView mNotifyDateTextView;
+        TextView mCreateDateTextView;
         TextView mEventContentTextView;
 
         public EventViewHolder(View view){
             mStarImageView = (ImageView)view.findViewById(R.id.iv_star);
-            mNotifyDateTextView = (TextView)view.findViewById(R.id.tv_notify_date);
+            mCreateDateTextView = (TextView)view.findViewById(R.id.tv_create_date);
             mEventContentTextView = (TextView)view.findViewById(R.id.tv_event_content);
         }
     }
 
     private class DateViewHolder{
-        TextView mCreateDateTextView;
+        TextView mDoEventDateTextView;
 
         public DateViewHolder(View view){
-            mCreateDateTextView = (TextView)view.findViewById(R.id.tv_create_date);
+            mDoEventDateTextView = (TextView)view.findViewById(R.id.tv_do_event_date);
         }
     }
 }

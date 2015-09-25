@@ -3,7 +3,6 @@ package com.roubow.xufnotify.data;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.security.PublicKey;
 import java.util.Date;
 import java.util.UUID;
 
@@ -16,14 +15,14 @@ public class EventBean {
     private final String JSON_IS_DATE_ITEM = "is_date_item";
     private final String JSON_IS_STAR_EVENT = "is_star_event";
     private final String JSON_CREATE_DATE = "create_date";
-    private final String JSON_NOTIFY_DATE = "notify_date";
+    private final String JSON_DO_EVENT_DATE = "do_event_date";
     private final String JSON_EVENT_CONTENT = "event_content";
 
     private UUID mId;
     private boolean mIsDateItem;
     private boolean mIsStarEvent;
     private Date mCreateDate;
-    private Date mNotifyDate;
+    private Date mDoEventDate;
     private String mEventContent;
 
     public EventBean(){
@@ -37,9 +36,11 @@ public class EventBean {
         mId = UUID.fromString(jsonObject.getString(JSON_ID));
         mIsDateItem = jsonObject.getBoolean(JSON_IS_DATE_ITEM);
         mIsStarEvent = jsonObject.getBoolean(JSON_IS_STAR_EVENT);
-        mCreateDate = new Date(jsonObject.getLong(JSON_CREATE_DATE));
-        if (jsonObject.has(JSON_NOTIFY_DATE)){
-            mNotifyDate = new Date(jsonObject.getLong(JSON_NOTIFY_DATE));
+        if (jsonObject.has(JSON_CREATE_DATE)) {
+            mCreateDate = new Date(jsonObject.getLong(JSON_CREATE_DATE));
+        }
+        if (jsonObject.has(JSON_DO_EVENT_DATE)){
+            mDoEventDate = new Date(jsonObject.getLong(JSON_DO_EVENT_DATE));
         }
         if (jsonObject.has(JSON_EVENT_CONTENT)){
             mEventContent = jsonObject.getString(JSON_EVENT_CONTENT);
@@ -51,9 +52,11 @@ public class EventBean {
         jsonObject.put(JSON_ID, mId.toString());
         jsonObject.put(JSON_IS_DATE_ITEM, mIsDateItem);
         jsonObject.put(JSON_IS_STAR_EVENT, mIsStarEvent);
-        jsonObject.put(JSON_CREATE_DATE, mCreateDate.getTime());
-        if (mNotifyDate != null){
-            jsonObject.put(JSON_NOTIFY_DATE, mNotifyDate.getTime());
+        if (mCreateDate != null) {
+            jsonObject.put(JSON_CREATE_DATE, mCreateDate.getTime());
+        }
+        if (mDoEventDate != null){
+            jsonObject.put(JSON_DO_EVENT_DATE, mDoEventDate.getTime());
         }
         if (mEventContent != null){
             jsonObject.put(JSON_EVENT_CONTENT, mEventContent);
@@ -85,12 +88,12 @@ public class EventBean {
         return mEventContent;
     }
 
-    public void setNotifyDate(Date date){
-        mNotifyDate = date;
+    public void setDoEventDate(Date date){
+        mDoEventDate = date;
     }
 
-    public Date getNotifyDate(){
-        return mNotifyDate;
+    public Date getDoEventDate(){
+        return mDoEventDate;
     }
 
     public void setCreateDate(Date createDate){
