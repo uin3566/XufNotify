@@ -28,6 +28,6 @@
         android:id="@+id/date_time_picker"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="#CBEFFF"/>
+        android:background="@color/simple_blue"/>
 
 </LinearLayout>

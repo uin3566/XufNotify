@@ -4,6 +4,11 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockActivity;
@@ -35,6 +40,7 @@ public class MainActivity extends SherlockActivity {
 
     private long mFirstBackPressTime;
 
+    private RelativeLayout mEmptyViewContainer;
     private SwipeMenuListView mListView;
     private TimeTrackAdapter mAdapter;
 
@@ -49,15 +55,17 @@ public class MainActivity extends SherlockActivity {
     @Override
     protected void onResume() {
         super.onResume();
+
+        _updateEmptyView();
         mAdapter.setData(EventLab.getInstance().getEventBeanList());
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        try{
+        try {
             _saveEventsToFile();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -67,31 +75,41 @@ public class MainActivity extends SherlockActivity {
         super.onDestroy();
     }
 
-    private void _init(){
+    private void _updateEmptyView(){
+        if (EventLab.getInstance().getEventBeanList().isEmpty()){
+            mEmptyViewContainer.setVisibility(View.VISIBLE);
+        } else {
+            mEmptyViewContainer.setVisibility(View.INVISIBLE);
+        }
+    }
+
+    private void _init() {
 
         startService(new Intent(this, BackgroundService.class));
 
         setTitle("备忘");
         getSupportActionBar().setDisplayShowHomeEnabled(false);
 
-        mListView = (SwipeMenuListView)findViewById(R.id.lv_time_track);
+        mEmptyViewContainer = (RelativeLayout) findViewById(R.id.rl_empty_view_container);
+        mEmptyViewContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent(MainActivity.this, EventDetailActivity.class);
+                startActivity(i);
+            }
+        });
+
+        mListView = (SwipeMenuListView) findViewById(R.id.lv_time_track);
         mAdapter = new TimeTrackAdapter(this);
         mListView.setAdapter(mAdapter);
 
         SwipeMenuCreator creator = new SwipeMenuCreator() {
             @Override
             public void create(SwipeMenu swipeMenu) {
-                if (swipeMenu.getViewType() == mAdapter.TYPE_EVENT){
-                    //star item
-                    SwipeMenuItem starItem = new SwipeMenuItem(MainActivity.this);
-                    starItem.setBackground(new ColorDrawable(Color.rgb(0x30, 0xB1, 0xF5)));
-                    starItem.setWidth(DimenUtil.dp2px(MainActivity.this, 70));
-                    starItem.setIcon(R.mipmap.ic_star);
-                    swipeMenu.addMenuItem(starItem);
+                if (swipeMenu.getViewType() == mAdapter.TYPE_EVENT) {
                     //delete item
                     SwipeMenuItem deleteItem = new SwipeMenuItem(MainActivity.this);
-                    deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9,
-                            0x3F, 0x25)));
+                    deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                     deleteItem.setWidth(DimenUtil.dp2px(MainActivity.this, 70));
                     deleteItem.setIcon(R.mipmap.ic_delete);
                     swipeMenu.addMenuItem(deleteItem);
@@ -103,33 +121,29 @@ public class MainActivity extends SherlockActivity {
         mListView.setOnMenuItemClickListener(new SwipeMenuListView.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(int position, SwipeMenu swipeMenu, int index) {
-                if (index == 0){
-                    EventLab.getInstance().starItemAt(position);
-                    mAdapter.notifyDataSetChanged();
-                } else {
-                    EventLab.getInstance().deleteEventAt(position);
-                    mAdapter.notifyDataSetChanged();
-                }
+                EventLab.getInstance().deleteEventAt(position);
+                _updateEmptyView();
+                mAdapter.notifyDataSetChanged();
                 return true;
             }
         });
 
-        try{
+        try {
             _getEventsFromFile();
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void _saveEventsToFile() throws JSONException , IOException{
+    private void _saveEventsToFile() throws JSONException, IOException {
         List<EventBean> eventBeanList = EventLab.getInstance().getEventBeanList();
-        if (eventBeanList == null || eventBeanList.isEmpty()){
+        if (eventBeanList == null || eventBeanList.isEmpty()) {
             FileUtil.deleteFile(this, FILE_NAME);
             return;
         }
 
         JSONArray jsonArray = new JSONArray();
-        for (EventBean eventBean : eventBeanList){
+        for (EventBean eventBean : eventBeanList) {
             JSONObject jsonObject = eventBean.toJson();
             jsonArray.put(jsonObject);
         }
@@ -137,11 +151,11 @@ public class MainActivity extends SherlockActivity {
         FileUtil.saveString(this, FILE_NAME, jsonArray.toString());
     }
 
-    private void _getEventsFromFile() throws IOException, JSONException{
+    private void _getEventsFromFile() throws IOException, JSONException {
         String jsonString = FileUtil.getString(this, FILE_NAME);
-        JSONArray jsonArray = (JSONArray)new JSONTokener(jsonString).nextValue();
+        JSONArray jsonArray = (JSONArray) new JSONTokener(jsonString).nextValue();
         EventLab.getInstance().clearLab();
-        for (int i = 0; i < jsonArray.length(); i++){
+        for (int i = 0; i < jsonArray.length(); i++) {
             JSONObject jsonObject = jsonArray.getJSONObject(i);
             EventLab.getInstance().addEvent(new EventBean(jsonObject));
         }
@@ -156,7 +170,7 @@ public class MainActivity extends SherlockActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
+        switch (item.getItemId()) {
             case R.id.menu_item_new_event:
                 Intent i = new Intent(MainActivity.this, EventDetailActivity.class);
                 startActivity(i);
@@ -167,7 +181,7 @@ public class MainActivity extends SherlockActivity {
 
     @Override
     public void onBackPressed() {
-        if (mFirstBackPressTime + 2000 > System.currentTimeMillis()){
+        if (mFirstBackPressTime + 2000 > System.currentTimeMillis()) {
             super.onBackPressed();
         } else {
             Toast.makeText(this, "再按一次推出备忘", Toast.LENGTH_SHORT).show();

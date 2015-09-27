@@ -3,6 +3,10 @@ package com.roubow.xufnotify.data;
 import com.roubow.xufnotify.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -30,26 +34,47 @@ public class EventLab {
     }
 
     public void addEventEx(EventBean e){
-        if (mEventBeanList.size() >= 1){
-            EventBean previous = mEventBeanList.get(0);
-            boolean isDifferentDay = DateUtil.isDifferentDay(previous.getCreateDate(), e.getCreateDate());
-            if (isDifferentDay){
-                _addEventAndDateItem(e);
-            } else {
-                mEventBeanList.add(1, e);
+        if (mEventBeanList.isEmpty()){
+            _addEventAndDateItem(0, e);
+            return;
+        }
+        if (DateUtil.compareDay(e.getDoEventDate(), mEventBeanList.get(0).getDoEventDate()) > 0){
+            _addEventAndDateItem(0, e);
+            return;
+        }
+        if (DateUtil.compareDay(e.getDoEventDate(), mEventBeanList.get(0).getDoEventDate()) == 0){
+            for (int i = 1; i < mEventBeanList.size(); i++){
+                if (e.getDoEventDate().after(mEventBeanList.get(i).getDoEventDate())){
+                    mEventBeanList.add(i, e);
+                    return;
+                }
             }
-        } else {
-            _addEventAndDateItem(e);
+        }
+        if (DateUtil.compareDay(e.getDoEventDate(), mEventBeanList.get(0).getDoEventDate()) < 0){
+            for (int i = 1; i < mEventBeanList.size(); i++){
+                if (DateUtil.compareDay(e.getDoEventDate(), mEventBeanList.get(i).getDoEventDate()) == 0){
+                    for (int j = i + 1; j < mEventBeanList.size(); j++){
+                        if (e.getDoEventDate().after(mEventBeanList.get(j).getDoEventDate())){
+                            mEventBeanList.add(j, e);
+                            return;
+                        }
+                    }
+                }
+                if (DateUtil.compareDay(e.getDoEventDate(), mEventBeanList.get(i).getDoEventDate()) > 0){
+                    _addEventAndDateItem(i, e);
+                    return;
+                }
+            }
+            _addEventAndDateItem(mEventBeanList.size() - 1, e);
         }
     }
 
-    //如果添加的项与列表的前一项不是同一天或这是列表项为空，则需要再添加纯日期项
-    private void _addEventAndDateItem(EventBean eventItem){
+    private void _addEventAndDateItem(int pos, EventBean eventItem) {
         EventBean dateItemEvent = new EventBean();
         dateItemEvent.setDateItem(true);
         dateItemEvent.setDoEventDate(eventItem.getDoEventDate());
-        mEventBeanList.add(0, eventItem);
-        mEventBeanList.add(0, dateItemEvent);
+        mEventBeanList.add(pos, eventItem);
+        mEventBeanList.add(pos, dateItemEvent);
     }
 
     public void deleteEventAt(int position){
@@ -87,11 +112,6 @@ public class EventLab {
 
     public void clearLab(){
         mEventBeanList.clear();
-    }
-
-    public void starItemAt(int position){
-        boolean b = mEventBeanList.get(position).isStarEvent();
-        mEventBeanList.get(position).setStarEvent(!b);
     }
 
     public List<EventBean> getEventBeanList(){

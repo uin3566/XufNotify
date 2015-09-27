@@ -12,6 +12,7 @@ import com.roubow.xufnotify.R;
 import com.roubow.xufnotify.data.EventBean;
 import com.roubow.xufnotify.util.DateUtil;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -90,28 +91,30 @@ public class TimeTrackAdapter extends BaseAdapter {
 
         if (type == TYPE_DATE){
             dateHolder = (DateViewHolder)convertView.getTag();
-            dateHolder.mDoEventDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getDoEventDate()));
+            Date today = new Date();
+            if (DateUtil.compareDay(today, eventBean.getDoEventDate()) == 0){
+                dateHolder.mDoEventDateTextView.setText("今天 TODO:");
+            } else {
+                dateHolder.mDoEventDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getDoEventDate())
+                        + " " + DateUtil.getWeekDayString(eventBean.getDoEventDate()) + " TODO:");
+            }
         } else {
             eventHolder = (EventViewHolder)convertView.getTag();
-            eventHolder.mCreateDateTextView.setText(DateUtil.getDateString(eventBean.getCreateDate()));
+            eventHolder.mCreateDateTextView.setText(DateUtil.getDateStringYMD(eventBean.getCreateDate()));
+            eventHolder.mDoEventTimeTextView.setText(DateUtil.getDateStringHM(eventBean.getDoEventDate()));
             eventHolder.mEventContentTextView.setText(eventBean.getEventContent());
-            if (eventBean.isStarEvent()){
-                eventHolder.mStarImageView.setVisibility(View.VISIBLE);
-            } else {
-                eventHolder.mStarImageView.setVisibility(View.INVISIBLE);
-            }
         }
 
         return convertView;
     }
 
     private class EventViewHolder{
-        ImageView mStarImageView;
+        TextView mDoEventTimeTextView;
         TextView mCreateDateTextView;
         TextView mEventContentTextView;
 
         public EventViewHolder(View view){
-            mStarImageView = (ImageView)view.findViewById(R.id.iv_star);
+            mDoEventTimeTextView = (TextView)view.findViewById(R.id.tv_do_event_time);
             mCreateDateTextView = (TextView)view.findViewById(R.id.tv_create_date);
             mEventContentTextView = (TextView)view.findViewById(R.id.tv_event_content);
         }

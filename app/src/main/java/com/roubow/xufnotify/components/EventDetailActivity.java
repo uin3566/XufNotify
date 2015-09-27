@@ -64,7 +64,7 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(connection);
+        //unbindService(connection);
     }
 
     private void _init(){
@@ -86,7 +86,8 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
         mDateTimePicker.setCallback(this);
 
         mSetTimeTextView = (TextView)findViewById(R.id.tv_set_notify_time);
-        mSetTimeTextView.setText("设置待办时间：" + DateUtil.getCurrentDateString());
+        mSetTimeTextView.setText("设置待办时间：" + DateUtil.getDateStringYMD(new Date()) + " "
+                + DateUtil.getWeekDayString(new Date()) + " " + DateUtil.getDateStringHM(new Date()));
 
     }
 
@@ -119,7 +120,8 @@ public class EventDetailActivity extends SherlockActivity implements DateTimePic
 
     @Override
     public void onDateTimeChange(Date date) {
-        mSetTimeTextView.setText("设置提醒时间：" + DateUtil.getDateString(date));
+        mSetTimeTextView.setText("设置待办时间：" + DateUtil.getDateStringYMD(date) + " "
+                + DateUtil.getWeekDayString(date) + " " + DateUtil.getDateStringHM(date));
     }
 
     private boolean _saveEvent(){
